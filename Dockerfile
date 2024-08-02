@@ -26,4 +26,4 @@ RUN chmod +x /app/docker_entry.sh
 ENTRYPOINT ["/app/docker_entry.sh"]
 
 # Define the command to run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "amcef_proj.wsgi:application"]
+# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "amcef_proj.wsgi:application"]

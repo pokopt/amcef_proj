@@ -22,6 +22,7 @@ from drf_yasg.views import get_schema_view
 from posts.views import PostViewSet
 from posts import views
 
+
 router = DefaultRouter()
 router.register(r'posts', PostViewSet, basename='post')
 
