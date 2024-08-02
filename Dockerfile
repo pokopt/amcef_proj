@@ -19,5 +19,11 @@ COPY . /app/
 # Expose port 8000 to the outside world
 EXPOSE 8000
 
+# Copy the entrypoint script and make it executable
+COPY docker_entry.sh /app/
+RUN chmod +x /app/docker_entry.sh
+# Set the entrypoint to the custom script
+ENTRYPOINT ["/app/docker_entry.sh"]
+
 # Define the command to run the application
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "amcef_proj.wsgi:application"]
