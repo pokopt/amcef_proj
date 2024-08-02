@@ -10,6 +10,9 @@ from .serializers import PostSerializer, PostUpdateSerializer
 import requests
 from drf_yasg.utils import swagger_auto_schema
 
+def index(request):
+    return render(request, 'posts/index.html')
+
 class PostViewSet(viewsets.ViewSet):
     def list(self, request):
         posts = Post.objects.all()

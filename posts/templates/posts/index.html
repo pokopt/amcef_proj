@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts Frontend</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+        .post-item {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Posts</h1>
+        
+        <h2>Show All Posts</h2>
+        <button onclick="fetchPosts()">Fetch Posts</button>
+        <div id="posts-list"></div>
+        
+        <h2>Show Post by ID</h2>
+        <input type="number" id="post-id" placeholder="Post ID">
+        <button onclick="fetchPostById()">Fetch Post</button>
+        <div id="post-details"></div>
+        
+        <h2>Show Posts by User ID</h2>
+        <input type="number" id="user-id" placeholder="User ID">
+        <button onclick="fetchPostsByUserId()">Fetch Posts by User ID</button>
+        <div id="user-posts-list"></div>
+        
+        <h2>Create Post</h2>
+        <input type="number" id="create-post-user-id" placeholder="User ID">
+        <input type="string" id="create-post-title" placeholder="Post Title">
+        <input type="string" id="create-post-body" placeholder="Post Body">
+        <button onclick="uploadPost()">Create Post</button>
+        <div id="create-status"></div>
+
+        <h2>Delete Post by ID</h2>
+        <input type="number" id="delete-post-id" placeholder="Post ID">
+        <button onclick="deletePostById()">Delete Post</button>
+        <div id="delete-status"></div>
+    </div>
+
+    <script>
+        const apiUrl = 'http://127.0.0.1:8000/api/posts/';
+
+        async function fetchPosts() {
+            try {
+                const response = await fetch(apiUrl);
+                const posts = await response.json();
+                displayPosts(posts, 'posts-list');
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+            }
+        }
+
+        async function fetchPostById() {
+            const postId = document.getElementById('post-id').value;
+            try {
+                const response = await fetch(`${apiUrl}${postId}/`);
+                if (response.ok) {
+                    const post = await response.json();
+                    displayPost(post, 'post-details');
+                } else {
+                    document.getElementById('post-details').innerText = 'Post not found';
+                }
+            } catch (error) {
+                console.error('Error fetching post:', error);
+            }
+        }
+
+        async function fetchPostsByUserId() {
+            const userId = document.getElementById('user-id').value;
+            try {
+                const response = await fetch(`${apiUrl}by_user/${userId}/`);
+                const posts = await response.json();
+                displayPosts(posts, 'user-posts-list');
+            } catch (error) {
+                console.error('Error fetching posts by user ID:', error);
+            }
+        }
+
+        async function deletePostById() {
+            const postId = document.getElementById('delete-post-id').value;
+            try {
+                const response = await fetch(`${apiUrl}${postId}/`, {
+                    method: 'DELETE',
+                });
+                if (response.ok) {
+                    document.getElementById('delete-status').innerText = 'Post deleted successfully';
+                } else {
+                    document.getElementById('delete-status').innerText = 'Failed to delete post';
+                }
+            } catch (error) {
+                console.error('Error deleting post:', error);
+            }
+        }
+
+        function displayPosts(posts, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.className = 'post-item';
+                postElement.innerHTML = `
+                    <h3>${post.title}</h3>
+                    <p><strong>${post.body}</p></strong> 
+                    <p>Post ID:${post.id}</p>
+                    <p>User ID:${post.userId}</p>
+                `;
+                container.appendChild(postElement);
+            });
+        }
+
+        function displayPost(post, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            if (post) {
+                container.innerHTML = `
+                    <h3>${post.title}</h3>
+                    <p>${post.body}</p>
+                    <p><strong>User ID:</strong> ${post.userId}</p>
+                `;
+            } else {
+                container.innerText = 'Post not found';
+            }
+        }
+
+        async function uploadPost(post, containerId) {
+            const userId = document.getElementById('create-post-user-id').value;
+            const title = document.getElementById('create-post-title').value;
+            const body = document.getElementById('create-post-body').value;
+            try {
+                const response = await fetch(`${apiUrl}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        title: title,
+                        body: body    
+                    }),
+                });
+                if (response.ok) {
+                    document.getElementById('create-status').innerText = 'Post created successfully';
+                } else {
+                    document.getElementById('create-status').innerText = `Failed to create post.`;
+                }
+            } catch (error) {
+                console.error('Error creating post:', error);
+            }
+        }
+
+    </script>
+</body>
+</html>

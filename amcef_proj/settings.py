@@ -28,7 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['amcef-proj.fly.dev',    
                  'localhost',
-                 '127.0.0.1'
+                 '127.0.0.1',
+                 '0.0.0.0'
                  ]
 
 
@@ -61,7 +62,7 @@ ROOT_URLCONF = 'amcef_proj.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -73,6 +74,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'amcef_proj.wsgi.application'
 
