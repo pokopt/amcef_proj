@@ -54,7 +54,7 @@ cd amcef_proj
 
 1. **Access Frontend**
 
-    - Open `index.html` in your browser. This file provides a simple interface to interact with the backend.
+    - Frontend is running at host & port where backend is running - e.g if django backend is running at http://127.0.0.1:8000/ entering http://127.0.0.1:8000/frontend in your browser opens simple frontend.
 
 ### API Endpoints
 All endpoints are documented by swagger. Open url http://127.0.0.1:8000/swagger/ for swagger doc.
